@@ -18,7 +18,7 @@ const connectionURL = "mongodb://127.0.0.1:27017";
 const databaseName = "task-manager";
 
 //method
-const method = "insertMany";
+const method = "findAll";
 
 // connect to the database
 function connect(connectionURL, databaseName) {
@@ -47,6 +47,12 @@ connect(connectionURL, databaseName).then(db => {
       break;
     case "insertMany":
       addMany(db, "users", [{ name: "walid", age: 28 }]);
+      break;
+    case "findOne":
+      findOne(db, "users", { name: "ozil" });
+      break;
+    case "findAll":
+      findAll(db, "users", { name: "walid" });
       break;
   }
   //     insert data to the collection
@@ -86,6 +92,47 @@ function addOne(db, collection, value) {
       .catch(error => {
         console.log(chalk.red("Unable to insert the data!"));
         reject(error);
+      });
+  });
+}
+
+// find one  / EX : query => {name:ozil}
+function findOne(db, collection, query) {
+  return new Promise((resolve, reject) => {
+    db.collection(collection)
+      .findOne(query)
+      .then(result => {
+        if (result) {
+          console.log(chalk.blue(`document found successfully`));
+        } else {
+          console.log(chalk.red(`document not found !`));
+        }
+
+        resolve(result);
+      })
+      .catch(error => {
+        console.log(chalk.red("Unable to find the data!"));
+        reject(error);
+      });
+  });
+}
+
+// find many /EX : query => {name:ozil}
+function findAll(db, collection, query) {
+  return new Promise((resolve, reject) => {
+    db.collection(collection)
+      .find(query)
+      .toArray()
+      .then(result => {
+        if (result.length > 0) {
+          console.log(chalk.blue(`documents found successfully`));
+        } else {
+          console.log(chalk.red(`documents not found !`));
+        }
+        resolve(result);
+      })
+      .catch(err => {
+        reject(err);
       });
   });
 }
