@@ -12,3 +12,8 @@ implement mongodb operations using promises
 - updateMany
 - deleteOne
 - deleteMany
+
+# MongoDB driver
+
+- The official MongoDB driver for Node.js
+- npm i mongodb
