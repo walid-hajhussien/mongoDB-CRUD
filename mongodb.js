@@ -66,7 +66,6 @@ connect(connectionURL, databaseName).then(db => {
       deleteMany(db, "users", { age: 20 });
       break;
   }
-  //     insert data to the collection
 });
 
 //helpers
