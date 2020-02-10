@@ -1,6 +1,6 @@
 # MONGODB-CRUD
 
-implemant mongodb operations usin promises
+implement mongodb operations using promises
 
 # operations
 
