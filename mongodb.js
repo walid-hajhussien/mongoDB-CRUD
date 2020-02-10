@@ -18,7 +18,7 @@ const connectionURL = "mongodb://127.0.0.1:27017";
 const databaseName = "task-manager";
 
 //method
-const method = "updateMany";
+const method = "deleteMany";
 
 // connect to the database
 function connect(connectionURL, databaseName) {
@@ -58,6 +58,12 @@ connect(connectionURL, databaseName).then(db => {
       break;
     case "updateMany":
       updateMany(db, "users", { name: "walid" }, { $set: { age: 20 } });
+      break;
+    case "deleteOne":
+      deleteOne(db, "users", { age: 20 });
+      break;
+    case "deleteMany":
+      deleteMany(db, "users", { age: 20 });
       break;
   }
   //     insert data to the collection
@@ -167,12 +173,48 @@ function updateMany(db, collection, filter, update) {
       .updateMany(filter, update)
       .then(result => {
         console.log(
-          chalk.blue(result.modifiedCount + " Document has been updated")
+          chalk.blue(result.modifiedCount + " Documents has been updated")
         );
         resolve(result);
       })
       .catch(err => {
-        chalk.red("not able to update  document!");
+        chalk.red("not able to update  documents!");
+        reject(err);
+      });
+  });
+}
+
+// Delete one /Ex: filter=>{name:ozil}
+function deleteOne(db, collection, filter) {
+  return new Promise((resolve, reject) => {
+    db.collection(collection)
+      .deleteOne(filter)
+      .then(result => {
+        console.log(
+          chalk.blue(result.deletedCount + " Document has been deleted")
+        );
+        resolve(result);
+      })
+      .catch(err => {
+        chalk.red("not able to delete  document!");
+        reject(err);
+      });
+  });
+}
+
+// Delete many /Ex: filter=>{name:ozil}
+function deleteMany(db, collection, filter) {
+  return new Promise((resolve, reject) => {
+    db.collection(collection)
+      .deleteMany(filter)
+      .then(result => {
+        console.log(
+          chalk.blue(result.deletedCount + " Documents has been deleted")
+        );
+        resolve(result);
+      })
+      .catch(err => {
+        chalk.red("not able to delete  documents!");
         reject(err);
       });
   });
