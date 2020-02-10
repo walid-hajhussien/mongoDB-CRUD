@@ -18,7 +18,7 @@ const connectionURL = "mongodb://127.0.0.1:27017";
 const databaseName = "task-manager";
 
 //method
-const method = "findAll";
+const method = "updateMany";
 
 // connect to the database
 function connect(connectionURL, databaseName) {
@@ -43,7 +43,6 @@ connect(connectionURL, databaseName).then(db => {
   switch (method) {
     case "insertOne":
       addOne(db, "users", { name: "ozil", age: 28 });
-
       break;
     case "insertMany":
       addMany(db, "users", [{ name: "walid", age: 28 }]);
@@ -53,6 +52,12 @@ connect(connectionURL, databaseName).then(db => {
       break;
     case "findAll":
       findAll(db, "users", { name: "walid" });
+      break;
+    case "updateOne":
+      updateOne(db, "users", { name: "ozil" }, { $set: { name: "walid" } });
+      break;
+    case "updateMany":
+      updateMany(db, "users", { name: "walid" }, { $set: { age: 20 } });
       break;
   }
   //     insert data to the collection
@@ -132,6 +137,42 @@ function findAll(db, collection, query) {
         resolve(result);
       })
       .catch(err => {
+        reject(err);
+      });
+  });
+}
+
+// update one /Ex: filter=>{name:ozil} , update=>{$set:{name:'walid'}}
+function updateOne(db, collection, filter, update) {
+  return new Promise((resolve, reject) => {
+    db.collection(collection)
+      .updateOne(filter, update)
+      .then(result => {
+        console.log(
+          chalk.blue(result.modifiedCount + " Document has been updated")
+        );
+        resolve(result);
+      })
+      .catch(err => {
+        chalk.red("not able to update  document!");
+        reject(err);
+      });
+  });
+}
+
+// update many /Ex: filter=>{name:ozil} , update=>{$set:{name:'walid'}}
+function updateMany(db, collection, filter, update) {
+  return new Promise((resolve, reject) => {
+    db.collection(collection)
+      .updateMany(filter, update)
+      .then(result => {
+        console.log(
+          chalk.blue(result.modifiedCount + " Document has been updated")
+        );
+        resolve(result);
+      })
+      .catch(err => {
+        chalk.red("not able to update  document!");
         reject(err);
       });
   });
